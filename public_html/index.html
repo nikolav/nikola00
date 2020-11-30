@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Obren Jović Savin</title>
+	<meta name="viewport" content="width=1024">
+    <meta name="keywords" content="Obren Jović Savin, Obren Jović Savin">
+    <meta name="description" content="Obren Jović Savin, srpski pisac, slikar, humanista... Biografija i bibliografija Obrena Jovića, izdate knjige, slikarstvo, pesnikov izbor poezije za decu i odrasle, obrazovna slikovnica za mlade, galerija sa slikarskim delima Obrena Jovića, pesme za čitanje, razna svedocanstva o životu i delu Obrena Jovića...">
+    <meta name="author" content="nikolav, vukovicnikola2014@gmail.com">
+    <meta name="robots" content="index,follow">
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style type="text/css">
+		
+		* {
+			margin:0;border:0;padding:0;
+			font-family: "Trebuchet MS", sans-serif;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+
+		#body_ {
+			position: fixed; z-index: 99999;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 21px;
+			background: rgba(0, 0, 0, .5);
+			-webkit-box-shadow: 1px 1px 2px 1px rgba(0,0,0,.25);
+			box-shadow: 1px 1px 2px 1px rgba(0,0,0,.25);		
+			border-bottom: 1px solid black
+		}
+		#bodycontent_ {
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: 0;
+			font-size: 88%;
+		}
+
+		#wchild {
+			margin: 0;
+			padding: 0;
+			border: 0;
+			width: 100%;
+		}
+
+		.soundctrl {
+			display: inline-block;
+			margin: 0;
+			padding: 0 12px;
+			border: 0;
+			height: 100%;
+			color: #ddd;
+			background: #333;
+			cursor: pointer;
+			font-style: italic;
+			float: right;
+			width: 111px;
+		}
+		.soundctrl:hover {
+			color: #fff;
+			background: black;
+		}
+		.soundctrl:active {
+			color: red;
+		}
+		.soundlog_ {
+			font-style: italic;
+			float: left;
+			display: inline-block;
+			height: 100%;
+			margin: 0;
+			padding: 0 12px;
+			border: 0;
+		}
+		.soundlog_ a {
+			text-decoration: none;
+			font-size: 77%;
+		}
+	</style>
+
+	<script src="wpscripts/jquery.js"></script>
+	<script src="./etc/cookie_.js"></script>
+    <link rel="icon" href="favicon.png" type="image/x-icon" sizes="16x16 32x32 48x48 64x64">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" sizes="16x16 32x32 48x48 64x64">
+
+</head>
+<body >
+<div id="body_">
+	<span class="soundlog_"><span id="soundlog"></span></span>
+	<div id="bodycontent_">
+		<button class="soundctrl volumetoggleoff" type="button" id="tglmute0"><span><i class="glyphicon glyphicon-volume-off"></i> tiho</span></button>
+		<button class="soundctrl" type="button" id="volumeup0"><i class="glyphicon glyphicon-volume-up"></i> pojačaj</button>
+		<button class="soundctrl" type="button" id="volumedown0"><i class="glyphicon glyphicon-volume-down"></i> utišaj</button>
+	</div>
+
+<script>
+
+/*
+
+.volumetoggleoff
+.volumetoggleon
+
+<span><i class="glyphicon glyphicon-volume-off"></i> tiho</span>
+<span><i class="glyphicon glyphicon-play"></i> muzika</span>
+
+*/
+
+window['__'] = {};
+
+(function ($, __) {
+
+WINNAME = 'MAIN_W';
+
+$(function () {
+
+var eleA;
+var eleA$;
+var wchild$;
+var win$;
+var soundlog$;
+var soundctrldown$;
+var soundctrlup$;
+
+win$              = $(window);
+wchild$           = $('#wchild');
+soundlog$         = $('#soundlog');
+soundctrldown$    = $('#volumedown0');
+soundctrlup$      = $('#volumeup0');
+soundctrltglmute$ = $('#tglmute0');
+SOUNDVOLINCREMENT = .2222;
+
+eleA          = new Audio('./etc/silence-500ms.ogg');
+eleA.loop     = true;
+eleA.autoplay = true;
+eleA.preload  = true;
+eleA.muted    = false;
+eleA$         = $(eleA);
+
+if ( cookie_.has('obrenj.playsounds') ) {
+    if (!('true' == cookie_.fetch('obrenj.playsounds')))
+    	soundctrltglmuteoff();
+} else {
+	cookie_('obrenj.playsounds', 'true');
+}
+
+eleA$
+.on('canplay', function () { eleA.play(); })
+.on('playing', function () { 
+	soundlog$.html(('<a href="'+ eleA.src +'" target="_blank">'+ eleA.src.slice(eleA.src.lastIndexOf('/') + 1) +'</a>')); 
+});
+
+soundctrltglmute$
+.on('click', function () {
+	if ( soundctrltglmute$.hasClass('volumetoggleoff') ) {
+		soundctrltglmuteoff();
+	} else {
+		soundctrltglmuteon();
+	}
+});
+
+soundctrldown$.on('click', function () {
+	var vol;
+	__.sound.volume = ( vol = (__.sound.volume - SOUNDVOLINCREMENT) ) < 0 ? 0 :  vol;
+});
+soundctrlup$.on('click', function () {
+	var vol;
+	__.sound.volume = ( vol = (__.sound.volume + SOUNDVOLINCREMENT) ) > 1 ? 1 :  vol;
+});
+
+
+__['sound']     = eleA;
+__['sound$']    = eleA$;
+__['soundpath'] = {
+	  'silence'              : './etc/silence-500ms.ogg'
+	, 'karnevalzivotinja'    : './etc/karneval-zivotinja-kssans.ogg' 
+	, 'bolero'               : './etc/bolero-mravel.ogg' 
+	, 'playtimehappy'        : './etc/play-time-happy.ogg'
+	, 'fluteconcert'         : './etc/fluteconcert-mozart.ogg'
+	, 'vivaldispring'        : './etc/vivaldispring-4seasons.ogg'
+	, 'mokranjacliturgija'   : './etc/mokranjacliturgija.ogg'
+    , 'chopinnnocturne'      : './etc/chopinnnocturne.ogg'
+    , 'pojanjepaksentijevic' : './etc/pojanje-pavle-aksentijevic.ogg'
+    , 'blagoslovi'           : './etc/blagoslovi-divna-ljubojevic.ogg'
+    , 'vltavasmetana'        : './etc/vltavasmetana.ogg'
+    , 'beethoven5ta'         : './etc/beethoven5ta.ogg'
+    , 'meditation'           : './etc/meditation-massenet.ogg'};
+
+
+
+$(window).on( 'resize', setHeightWChild );
+
+
+function setHeightWChild () { wchild$.height( win$.height() - 5 ); }
+function soundctrltglmuteon () {
+	eleA.muted = false;
+	cookie_('obrenj.playsounds', 'true');
+	soundctrltglmute$
+	  .html('<span><i class="glyphicon glyphicon-volume-off"></i> tiho</span>')
+	  .removeClass('volumetoggleon')
+	  .addClass('volumetoggleoff');
+}
+function soundctrltglmuteoff () {
+	eleA.muted = true;
+	cookie_('obrenj.playsounds', 'false');
+	soundctrltglmute$
+	  .html('<span><i class="glyphicon glyphicon-play"></i> muzika</span>')
+	  .removeClass('volumetoggleoff')
+	  .addClass('volumetoggleon');
+}
+
+
+setHeightWChild();
+
+});
+
+
+})(jQuery, __);
+
+</script>
+
+</div>
+
+<iframe style="border:0;padding:0;margin:0;" height="625" name="www_" id="wchild" src="./xindex.html" frameborder="0"></iframe>
+
+</body>
+</html>
